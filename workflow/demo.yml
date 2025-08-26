@@ -1,0 +1,38 @@
+name: Deploy Web Application
+
+on:
+  push:
+    branches:
+      - main # Trigger on pushes to the 'main' branch
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest # Specify the runner environment
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4 # Action to checkout your code
+
+      - name: Setup Node.js (if applicable)
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18' # Specify Node.js version
+
+      - name: Install dependencies (if applicable)
+        run: npm install
+
+      - name: Build application (if applicable)
+        run: npm run build
+
+      - name: Deploy to production (example using rsync for static files)
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          source: "dist/" # Or your build output directory
+          target: "/var/www/html/your-app" # Remote deployment path
+          strip_components: 1 # Adjust as needed
+
+      - name: Notify deployment status (optional)
+        run: echo "Deployment completed successfully!"
