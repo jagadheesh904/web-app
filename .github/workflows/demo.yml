@@ -1,7 +1,7 @@
 name: Deploy Web Application
 
 on:
-  push:
+  workflow_dispatch:
     branches:
       - main # Trigger on pushes to the 'main' branch..
 
